@@ -19,6 +19,14 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+// export default function Index() {
+//   return (
+//     <div>
+//       <div className="text-center mb-8 relative mt-24 md:mt-32">hello</div>
+//     </div>
+//   );
+// }
+
 export default function Index() {
   return (
     <div>
@@ -32,9 +40,13 @@ export default function Index() {
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
           AKSHARA JAALA
         </h1>
-        <p className="text-xl md:text-2xl text-gray-400 mb-8">
-          Embark on a mind-bending adventure through words!
-        </p>
+        <blockquote className="text-2xl font-semibold italic text-center text-gray-400">
+          Embark on a
+          <span className="before:block before:absolute mx-4 before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block">
+            <span className="relative text-white">mind-bending</span>
+          </span>
+          adventure through words!
+        </blockquote>
       </motion.div>
 
       {/* Feature Cards */}
@@ -44,7 +56,9 @@ export default function Index() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 relative z-10"
       >
-        {MOCK_CARD_INFO.map((feature, index) => (
+        <div className="card">hello</div>
+
+        {/* {MOCK_CARD_INFO.map((feature, index) => (
           <Card
             key={index}
             className="bg-gray-900 border-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -64,7 +78,7 @@ export default function Index() {
               </CardDescription>
             </CardContent>
           </Card>
-        ))}
+        ))} */}
       </motion.div>
     </div>
   );

@@ -20,7 +20,15 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // backgroundImage: {
+      //   linear: ,
+      // },
       colors: {
+        color1: "var(--color-1)",
+        color2: "var(--color-2)",
+        color3: "var(--color-3)",
+        color4: "var(--color-4)",
+        color5: "var(--color-5)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
