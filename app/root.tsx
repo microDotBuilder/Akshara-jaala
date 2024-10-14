@@ -5,10 +5,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
-import { ClerkApp } from "@clerk/remix";
+import { ClerkApp, SignOutButton } from "@clerk/remix";
 
 import "./tailwind.css";
 import GeometryBackground from "./components/geometry-background";
@@ -23,8 +28,28 @@ import {
 } from "./components/ui/dropdown-menu";
 import { AlignJustifyIcon, HeartIcon, User2Icon, UserIcon } from "lucide-react";
 import { GeneralErrorBoundary } from "./components/error-boundary";
+import { useAuthStore } from "./helpers/zustand/auth-button-store";
+// import HeroSection from "./components/hero-section";
 
-export const loader: LoaderFunction = (args) => rootAuthLoader(args);
+export const loader: LoaderFunction = (args) => {
+  return rootAuthLoader(args, ({ request }) => {
+    const { sessionId, userId, getToken } = request.auth;
+    // fetch data
+    if (!userId) {
+      console.log("user is not logged in .");
+      return { data: "user is not logged in", isLoggedIn: false };
+    }
+
+    return {
+      data: {
+        sessionId,
+        userId,
+        getToken,
+      },
+      isLoggedIn: true,
+    };
+  });
+};
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -81,35 +106,63 @@ function App() {
     };
   }, []);
 
+  const { status, login, logout, signUp, idle, setStatus } = useAuthStore();
+  const { data, isLoggedIn } = useLoaderData<typeof loader>();
+  if (!isLoggedIn) {
+    // update the store here.
+    console.log(status);
+    // setStatus("loggingIn");
+  } else {
+    setStatus("loggingIn");
+  }
+  //update the store here.
   return (
     <div className="min-h-screen flex flex-col items-center p-4 overflow-hidden relative">
       <GeometryBackground />
+      {/* <HeroSection /> */}
       {/* Header */}
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         className="absolute top-7 right-7 flex space-x-4 z-10"
       >
+        {status === "loggingIn" ? (
+          <div className="hidden lg:flex space-x-4">
+            <Link to="/logout">
+              <Button
+                variant="outline"
+                className="bg-primary text-primary-foreground hover:bg-secondary/90"
+              >
+                <SignOutButton />
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="hidden lg:flex space-x-4">
+              <Link to="/signup">
+                <Button
+                  variant="outline"
+                  className="bg-primary text-primary-foreground hover:bg-secondary/90"
+                >
+                  SIGN UP
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button
+                  variant="outline"
+                  className="bg-secondary text-secondary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                >
+                  LOG IN
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
+
         {/* Desktop Buttons */}
-        <div className="hidden lg:flex space-x-4">
-          <Link to="/signup">
-            <Button
-              variant="outline"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Sign Up
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button
-              variant="outline"
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
-            >
-              Log In
-            </Button>
-          </Link>
-        </div>
 
         {/* Mobile Menu Icon */}
         <div className="lg:hidden">

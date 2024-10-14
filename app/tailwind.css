@@ -75,3 +75,10 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Optional: Custom utility class */
+@layer utilities {
+  .bg-gradient-animation {
+    @apply bg-gradient-to-br from-[#7A73FF] via-[#6E66FF] to-[#635AFF] bg-size-400 animate-gradient-flow;
+  }
+}
